@@ -71,8 +71,8 @@ void CSurfacePlane::Draw(void)
 {
 	//actualize the transformations
 	Graphics()->SetWorldMtx(m_mToWorldXFrom);
-	//Graphics()->SetCullNone();
-	Graphics()->SetCullFront();
+	Graphics()->SetCullNone();
+	//Graphics()->SetCullFront();
 	Graphics()->SetSmooth();
 	//get the buffers
 	UINT uiStride=sizeof(CSurfacePlaneVertex);
