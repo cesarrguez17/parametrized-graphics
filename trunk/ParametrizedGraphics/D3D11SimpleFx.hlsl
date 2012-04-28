@@ -37,25 +37,24 @@ cbuffer cbLightConstants : register(b1){
 struct VS_INPUT2
 {
 	float3 vPosition	:POSITION;
-	float2 vTexCoord	:TEXCOORD0;
+	//float2 vTexCoord	:TEXCOORD0;
 	//float4 vColor		:COLOR0;
 };
 
 struct VS_OUTPUT
 {
 	float3 vPosition	:WORLDPOS;
-	float2 vTexCoord	:TEXCOORD0;
+	//float2 vTexCoord	:TEXCOORD0;
 };
 struct HS_OUTPUT
 {
     float3 vPosition	: BEZIERPOS;
-	float2 vTexCoord	: TEXCOOR0;
+	//float2 vTexCoord	: TEXCOOR0;
 };
 struct DS_OUTPUT
 {
 	float4 vPosition	: SV_POSITION;
 	float3 v3DPos		: WORLDPOS;
-	float2 vTexCoord	:TEXCOORD0;
 };
 struct GS_OUTPUT
 {
@@ -63,7 +62,7 @@ struct GS_OUTPUT
 	float4 vColor		:COLOR0;
 	float3 v3DPos		:WORLDPOS;
 	float3 vNormal		:NORMAL;
-	float2 vTexCoord	:TEXCOORD0;
+	//float2 vTexCoord	:TEXCOORD0;
 };
 struct PS_INPUT
 {
@@ -79,16 +78,6 @@ VS_OUTPUT SmoothVS(VS_INPUT2 In)
 {	
 	VS_OUTPUT result;
     result.vPosition=mul(float4(In.vPosition, 1.0f), g_mWorld);
-	result.vTexCoord = In.vTexCoord;
-	/*float3 norm = normalize(In.vPosition);
-
-	float theta = acos(norm.y);
-	float phi = atan2(norm.x, norm.z);
-	float sintheta = sqrt(1.0f - norm.y * norm.y);
-			
-			
-	result.vTexCoord = float2(phi/2.0f / PI + .5f,  theta*2.0f / PI); */
-
     return result;  
 }
 
@@ -130,7 +119,7 @@ HS_OUTPUT SmoothHS( InputPatch<VS_OUTPUT, 16> p,
     
     HS_OUTPUT Output;
     Output.vPosition=p[i].vPosition;
-	Output.vTexCoord=p[i].vTexCoord;
+	//Output.vTexCoord=p[i].vTexCoord;
     return Output;
 }
 
@@ -139,14 +128,19 @@ HS_OUTPUT SmoothHS( InputPatch<VS_OUTPUT, 16> p,
 //--------------------------------------------------------------------
 //Domain shader
 //--------------------------------------------------------------------
-float3 calculateCubicBezier(float t, float3 p0, float3 p1, float3 p2, float3 p3){
-	float hPos = (1-t);
-	return pow(hPos,3)*p0+3*pow(hPos,2)*t*p1 + 3*hPos*pow(t,2)*p2+pow(t,3)*p3;
-}
 
-float2 calculateCubicBezier(float t, float2 p0, float2 p1, float2 p2, float2 p3){
-	float hPos = (1-t);
-	return pow(hPos,3)*p0+3*pow(hPos,2)*t*p1 + 3*hPos*pow(t,2)*p2+pow(t,3)*p3;
+
+float3 calculateFormula( float S, float T){
+	float3 pnt = float3(0,0,0);
+
+	float u = S*6.28;
+	float v = (T-.5)*3.14;
+
+	pnt.x = cos(v) * cos(u) ;
+	pnt.y = cos(v) *sin(u) ;
+	pnt.z = sin(v);
+
+	return pnt;
 }
 
 [domain("quad")]
@@ -156,26 +150,16 @@ DS_OUTPUT SmoothDS( HS_CONSTANT_DATA_OUTPUT input,
 {
     DS_OUTPUT Output;
 	
-	/*float3 B1=(bezpatch[3].vPosition-bezpatch[0].vPosition)*UV.x+bezpatch[0].vPosition;
-	float3 B2=(bezpatch[15].vPosition-bezpatch[12].vPosition)*UV.x+bezpatch[12].vPosition;
+	//float3 B1=(bezpatch[3].vPosition-bezpatch[0].vPosition)*UV.x+bezpatch[0].vPosition;
+	//float3 B2=(bezpatch[12].vPosition-bezpatch[0].vPosition)*UV.x+bezpatch[12].vPosition;
 	
-	float3 WorldPos=(B2-B1)*UV.y+B1;*/
+	/*float3 WorldPos=(B2-B1)*UV.y+B1;*/
 
 	//calculate bezier pos
-	float3 WorldPos = calculateCubicBezier(UV.y,
-							calculateCubicBezier(UV.x,bezpatch[0].vPosition, bezpatch[1].vPosition, bezpatch[2].vPosition, bezpatch[3].vPosition),
-							calculateCubicBezier(UV.x,bezpatch[4].vPosition, bezpatch[5].vPosition, bezpatch[6].vPosition, bezpatch[7].vPosition),
-							calculateCubicBezier(UV.x,bezpatch[8].vPosition, bezpatch[9].vPosition, bezpatch[10].vPosition, bezpatch[11].vPosition),
-							calculateCubicBezier(UV.x,bezpatch[12].vPosition, bezpatch[13].vPosition, bezpatch[14].vPosition, bezpatch[15].vPosition)
-						);
+	//calculateFormula(UV.x, UV.y);
+	float3 WorldPos = calculateFormula(UV.x, UV.y);
 	Output.v3DPos =WorldPos;
 
-	Output.vTexCoord = calculateCubicBezier(UV.y,
-							calculateCubicBezier(UV.x,bezpatch[0].vTexCoord, bezpatch[1].vTexCoord, bezpatch[2].vTexCoord, bezpatch[3].vTexCoord),
-							calculateCubicBezier(UV.x,bezpatch[4].vTexCoord, bezpatch[5].vTexCoord, bezpatch[6].vTexCoord, bezpatch[7].vTexCoord),
-							calculateCubicBezier(UV.x,bezpatch[8].vTexCoord, bezpatch[9].vTexCoord, bezpatch[10].vTexCoord, bezpatch[11].vTexCoord),
-							calculateCubicBezier(UV.x,bezpatch[12].vTexCoord, bezpatch[13].vTexCoord, bezpatch[14].vTexCoord, bezpatch[15].vTexCoord)
-						);
 
 	Output.vPosition =mul(float4(WorldPos,1.0f), g_mView);	
 	
@@ -202,17 +186,17 @@ void SmoothGS( triangle DS_OUTPUT input[3], inout TriangleStream<GS_OUTPUT> triS
 	vP0.vColor =float4(0,0,0,1);
 	vP0.v3DPos =input[0].v3DPos;
 	vP0.vNormal=faceNormal;
-	vP0.vTexCoord = input[0].vTexCoord;
+	//vP0.vTexCoord = input[0].vTexCoord;
     triStream.Append( vP0 );
 
 	vP0.vPosition = input[1].vPosition;
 	vP0.v3DPos =input[1].v3DPos;
-	vP0.vTexCoord = input[1].vTexCoord;
+	//vP0.vTexCoord = input[1].vTexCoord;
 	triStream.Append( vP0 );
 
 	vP0.vPosition = input[2].vPosition;
 	vP0.v3DPos =input[2].v3DPos;
-	vP0.vTexCoord = input[2].vTexCoord;
+	//vP0.vTexCoord = input[2].vTexCoord;
 	triStream.Append( vP0 );
 	triStream.RestartStrip();
 }
@@ -250,6 +234,6 @@ float4 SmoothPS(GS_OUTPUT In) : SV_TARGET
 {
 	
 	return calcPhongLighting(g_Ambient, normalize(In.vNormal), In.v3DPos); 
-	//return In.vColor;
+	//return float4(0,0,0,1);
 }
 
