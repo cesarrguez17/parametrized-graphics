@@ -18,11 +18,17 @@ CSurfacePlane				*g_Surface=NULL;
 bool						g_pause=false;
 HWND						g_hWnd; //R
 
+LPWSTR z_formula = TEXT("1");
+LPWSTR y_formula = TEXT("1");
+LPWSTR x_formula = TEXT("1");
+char* final_formula;
+
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK	Formulas(HWND, UINT, WPARAM, LPARAM);
 BOOL                InitDevice(HWND hWnd);
 void                Render();
 
@@ -132,6 +138,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
+
+
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
@@ -150,6 +158,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
+	case WM_CREATE:
+		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_FORMVIEW), hWnd, Formulas);
+		break;
 	case WM_KEYUP:
 		switch(wParam)
 		{		
@@ -235,6 +246,80 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
+	return (INT_PTR)FALSE;
+}
+
+INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDC_BUTTON1)
+		{
+			
+			//if(IDC_CHECK1)
+			//TODO:check how to read checkbox value
+			{
+				int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_EDIT1));
+				if(len > 0)
+						{
+							// Now we allocate, and get the string into our buffer
+
+							int i;
+							char* buf;
+
+							x_formula = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+							GetDlgItemText(hDlg, IDC_EDIT1, x_formula, len + 1);
+							//MessageBox(hDlg,x_formula, (LPCWSTR)"Warning", MB_OK );
+						}
+				 
+			}
+			//if(IDC_CHECK2)
+			{
+				int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_EDIT2));
+				if(len > 0)
+						{
+							// Now we allocate, and get the string into our buffer
+
+							int i;
+							char* buf;
+
+							y_formula = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+							GetDlgItemText(hDlg, IDC_EDIT2, y_formula, len + 1);
+							//MessageBox(hDlg,y_formula, (LPCWSTR)"Warning", MB_OK );
+						}
+			}
+			//if(IDC_CHECK3)
+			{
+				int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_EDIT3));
+				if(len > 0)
+						{
+							// Now we allocate, and get the string into our buffer
+
+							int i;
+							char* buf;
+
+							z_formula = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+							GetDlgItemText(hDlg, IDC_EDIT3, z_formula, len + 1);
+							//MessageBox(hDlg,z_formula, (LPCWSTR)"Warning", MB_OK );
+						}
+			}
+
+			final_formula = "float3 calculateFormula( float S, float T){float3 pnt = float3(0,0,0);	float u = S;	float v = T;	pnt.x = cos(v) * cos(u) ;	pnt.y = cos(v) *sin(u) ;	pnt.z = sin(v);	return pnt;}";
+
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		break;
+	case IDM_EXIT:
+			DestroyWindow(hDlg);
+			break;
+	}
+
 	return (INT_PTR)FALSE;
 }
 
