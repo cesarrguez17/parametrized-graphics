@@ -329,7 +329,7 @@ BOOL InitDevice(HWND hWnd)
 	RECT rect;
     GetClientRect(hWnd, &rect);
     BOOL result = TRUE;
-	CGraphicsLayer::Create(hWnd,rect.right - rect.left,rect.bottom - rect.top);
+	CGraphicsLayer::Create(hWnd,rect.right - rect.left,rect.bottom - rect.top, final_formula);
 	if(Graphics()==NULL){return FALSE;}
 	
 	g_Surface=new CSurfacePlane();

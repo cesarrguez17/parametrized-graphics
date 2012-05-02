@@ -9,7 +9,7 @@ class CGraphicsLayer
 
 protected:
 	//constructor
-	CGraphicsLayer(HWND	hwnd);	
+	CGraphicsLayer(HWND	hwnd, char* final_formula);	
 
 	//window handler
 	HWND						 m_hWnd;
@@ -19,6 +19,9 @@ protected:
 	ID3D11DeviceContext			*m_pDeviceContext;
 
 	//BOOL						 m_bDeviceActive;
+
+	//for graphing
+	char*						m_final_formula;
 
 	//shaders
 	ID3D11VertexShader			*m_pVSGouraud;
@@ -97,7 +100,7 @@ public:
 	{
 		return m_pGlobalGLayer;
 	}	
-	static void Create(HWND hWnd,short width,short height);
+	static void Create(HWND hWnd,short width,short height, char* final_formula);
 	
 	void SetWorldMtx(const D3DXMATRIX& mtxWorld){m_mWorld = mtxWorld;}
 	void SetViewMtx(const D3DXMATRIX& mtxView){m_mView = mtxView;}

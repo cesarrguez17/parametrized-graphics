@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "GraphicsLayer.h"
 #include <iostream>
+#include <string>
 using namespace std;
 
 
@@ -17,7 +18,7 @@ CGraphicsLayer *Graphics()
 	return CGraphicsLayer::GetGraphics();
 }
 //----------------------------------------------------------------
-CGraphicsLayer::CGraphicsLayer(HWND	hwnd)
+CGraphicsLayer::CGraphicsLayer(HWND	hwnd, char* final_formula)
 {
 	m_hWnd=hwnd;
 	m_pDevice = NULL;
@@ -32,6 +33,9 @@ CGraphicsLayer::CGraphicsLayer(HWND	hwnd)
 	m_pGSSmooth=NULL;
 	m_pPSShell=NULL;
 
+	//graphing
+	m_final_formula = final_formula;
+
 	//default is solid, wire is false
 	m_wire=0;						
 	m_pause=false;
@@ -43,9 +47,9 @@ CGraphicsLayer::CGraphicsLayer(HWND	hwnd)
 	m_pConstantsBuffer= NULL;
 	m_pConstantLightsBuffer= NULL;
 }
-void CGraphicsLayer::Create(HWND hWnd,short width,short height)
+void CGraphicsLayer::Create(HWND hWnd,short width,short height, char* final_formula)
 {
-	new CGraphicsLayer(hWnd);
+	new CGraphicsLayer(hWnd, final_formula);
 	Graphics()->InitD3D(width,height,32);
 }
 //---------------------------------------------------------------
@@ -561,9 +565,19 @@ HRESULT CGraphicsLayer::CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntry
 
     CloseHandle( hFile );
 
+	DWORD finalSize = sizeof(char)*6700;
+
+	char buffer [6700];
+
+	strcpy(buffer, m_final_formula);
+	strcat(buffer, (char*)pFileData);
+
     // Compile the shader
     ID3DBlob* pErrorBlob;
-    hr = D3DCompile( pFileData, FileSize.LowPart, "none", NULL, NULL, szEntryPoint, szShaderModel, D3D10_SHADER_ENABLE_STRICTNESS, 0, ppBlobOut, &pErrorBlob );
+
+
+	//TODO calculate the finalsize correctly so the buffer that contains the shader can be read!
+	hr = D3DCompile( buffer, finalSize, "none", NULL, NULL, szEntryPoint, szShaderModel, D3D10_SHADER_ENABLE_STRICTNESS, 0, ppBlobOut, &pErrorBlob );
 
     delete []pFileData;
 
