@@ -120,7 +120,7 @@ public:
 	void UpdateMatrices();
 	
 	HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Blob** ppBlobOut );
-	//HRESULT CompileShaderFromString( WCHAR* sSource, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Blob** ppBlobOut );
+	HRESULT CompileShaderFromString(LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Blob** ppBlobOut );
 	void SetCullBack();
 	void SetCullFront();
 	void SetCullNone();

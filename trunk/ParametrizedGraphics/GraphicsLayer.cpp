@@ -401,7 +401,8 @@ int CGraphicsLayer::CreateShader()
 	
 	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "SmoothVS",	   "vs_5_0", &pBlobVS )!=S_OK){return 1;}
 	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "SmoothHS",	   "hs_5_0", &pBlobHS )!=S_OK){return 1;}
-	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "SmoothDS",	   "ds_5_0", &pBlobDS )!=S_OK){return 1;}
+	 //if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "SmoothDS",	   "ds_5_0", &pBlobDS )!=S_OK){return 1;}
+	 if(CompileShaderFromString("SmoothDS", "ds_5_0", &pBlobDS) != S_OK){return 1;}
 	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "SmoothGS",	   "gs_5_0", &pBlobGS )!=S_OK){return 1;}
 	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "SmoothPS",	   "ps_5_0", &pBlobPS )!=S_OK){return 1;}
 	 
@@ -565,21 +566,43 @@ HRESULT CGraphicsLayer::CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntry
 
     CloseHandle( hFile );
 
-	DWORD finalSize = sizeof(char)*6700;
-
-	char buffer [6700];
-
-	strcpy(buffer, m_final_formula);
-	strcat(buffer, (char*)pFileData);
 
     // Compile the shader
     ID3DBlob* pErrorBlob;
 
 
 	//TODO calculate the finalsize correctly so the buffer that contains the shader can be read!
-	hr = D3DCompile( buffer, finalSize, "none", NULL, NULL, szEntryPoint, szShaderModel, D3D10_SHADER_ENABLE_STRICTNESS, 0, ppBlobOut, &pErrorBlob );
+	hr = D3DCompile(pFileData , FileSize.LowPart, "none", NULL, NULL, szEntryPoint, szShaderModel, D3D10_SHADER_ENABLE_STRICTNESS, 0, ppBlobOut, &pErrorBlob );
 
     delete []pFileData;
+
+    if( FAILED(hr) )
+    {
+        OutputDebugStringA( (char*)pErrorBlob->GetBufferPointer() );
+        //SAFE_RELEASE( pErrorBlob );
+        return hr;
+    }
+   // SAFE_RELEASE( pErrorBlob );
+
+    return S_OK;
+}
+
+HRESULT CGraphicsLayer::CompileShaderFromString(LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3D10Blob** ppBlobOut ){
+	HRESULT hr = S_OK;
+
+
+    // Get the file size
+
+
+	SIZE_T finalSize = 7000;
+
+    // Compile the shader
+    ID3DBlob* pErrorBlob;
+
+
+	//TODO calculate the finalsize correctly so the buffer that contains the shader can be read!
+	hr = D3DCompile( m_final_formula, finalSize, "none", NULL, NULL, szEntryPoint, szShaderModel, D3D10_SHADER_ENABLE_STRICTNESS, 0, ppBlobOut, &pErrorBlob );
+
 
     if( FAILED(hr) )
     {

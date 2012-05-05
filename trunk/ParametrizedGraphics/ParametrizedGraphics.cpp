@@ -1,7 +1,8 @@
 // ParametrizedGraphics.cpp : Defines the entry point for the application.
 //
-
 #include "stdafx.h"
+#include <stdio.h>
+
 #include "ParametrizedGraphics.h"
 #include "GraphicsLayer.h"
 #include "SurfacePlane.h"
@@ -18,10 +19,7 @@ CSurfacePlane				*g_Surface=NULL;
 bool						g_pause=false;
 HWND						g_hWnd; //R
 
-LPWSTR z_formula = TEXT("1");
-LPWSTR y_formula = TEXT("1");
-LPWSTR x_formula = TEXT("1");
-char* final_formula;
+char final_formula[7000];
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -248,6 +246,16 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return (INT_PTR)FALSE;
 }
+void wtoc(char* Dest, const WCHAR* Source)
+{
+int i = 0;
+
+while(Source[i] != '\0')
+{
+Dest[i] = Source[i];
+++i;
+}
+}
 
 INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -260,20 +268,26 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		if (LOWORD(wParam) == IDC_BUTTON1)
 		{
-			
+			char x_formula[100]={};
+			char y_formula[100]={};
+			char z_formula[100]={};
 			//if(IDC_CHECK1)
 			//TODO:check how to read checkbox value
 			{
 				int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_EDIT1));
+				
 				if(len > 0)
 						{
 							// Now we allocate, and get the string into our buffer
 
-							int i;
-							char* buf;
+							
+							LPWSTR temp =  TEXT("1");
+							HWND item = GetDlgItem(hDlg, IDC_EDIT1);
+							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
 
-							x_formula = (LPWSTR)GlobalAlloc(GPTR, len + 1);
-							GetDlgItemText(hDlg, IDC_EDIT1, x_formula, len + 1);
+							GetDlgItemText(hDlg, IDC_EDIT1, temp, len + 1);
+
+							wtoc(x_formula, temp);
 							//MessageBox(hDlg,x_formula, (LPCWSTR)"Warning", MB_OK );
 						}
 				 
@@ -281,15 +295,20 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			//if(IDC_CHECK2)
 			{
 				int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_EDIT2));
+				
 				if(len > 0)
 						{
 							// Now we allocate, and get the string into our buffer
 
-							int i;
-							char* buf;
 
-							y_formula = (LPWSTR)GlobalAlloc(GPTR, len + 1);
-							GetDlgItemText(hDlg, IDC_EDIT2, y_formula, len + 1);
+							LPWSTR temp =  TEXT("1");
+							HWND item = GetDlgItem(hDlg, IDC_EDIT1);
+							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+
+							GetDlgItemText(hDlg, IDC_EDIT2, temp, len + 1);
+
+							wtoc(y_formula, temp);
+
 							//MessageBox(hDlg,y_formula, (LPCWSTR)"Warning", MB_OK );
 						}
 			}
@@ -300,17 +319,58 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 						{
 							// Now we allocate, and get the string into our buffer
 
-							int i;
-							char* buf;
 
-							z_formula = (LPWSTR)GlobalAlloc(GPTR, len + 1);
-							GetDlgItemText(hDlg, IDC_EDIT3, z_formula, len + 1);
+							LPWSTR temp =  TEXT("1");
+							HWND item = GetDlgItem(hDlg, IDC_EDIT1);
+							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+
+							GetDlgItemText(hDlg, IDC_EDIT3, temp, len + 1);
+
+							wtoc(z_formula, temp);
+
 							//MessageBox(hDlg,z_formula, (LPCWSTR)"Warning", MB_OK );
 						}
 			}
-
-			final_formula = "float3 calculateFormula( float S, float T){float3 pnt = float3(0,0,0);	float u = S;	float v = T;	pnt.x = cos(v) * cos(u) ;	pnt.y = cos(v) *sin(u) ;	pnt.z = sin(v);	return pnt;}";
-
+			//cos(v) * cos(u) ;	pnt.y = cos(v) *sin(u) ;	pnt.z = sin(v);
+			strcat(final_formula, "float3 calculateFormula( float S, float T){float3 pnt = float3(0,0,0);	float u = S;	float v = T;	pnt.x =");
+			strcat(final_formula,x_formula);
+			strcat(final_formula,";\n pnt.y=");
+			strcat(final_formula,y_formula);
+			strcat(final_formula,";\n pnt.z=");
+			strcat(final_formula,z_formula);
+			strcat(final_formula,";return pnt;} \n");
+			
+			strcat(final_formula, 		"cbuffer cbPerFrame : register( b0 )");
+			strcat(final_formula, "{\n");
+			strcat(final_formula, 	"matrix g_mWorld;                   // World matrix for object\n");
+			strcat(final_formula, 	"matrix g_mView;					 // View matrix for object\n");
+			strcat(final_formula, 	"matrix g_mProj;					 // View matrix for object\n");
+			strcat(final_formula, 	"float4 g_vMouse;");
+	
+			strcat(final_formula, "};\n");
+			strcat(final_formula, "struct HS_OUTPUT");
+			strcat(final_formula,"{");
+			strcat(final_formula, "float3 vPosition	: BEZIERPOS;\n");
+			strcat(final_formula,"};\n");
+			strcat(final_formula, "struct HS_CONSTANT_DATA_OUTPUT");
+			strcat(final_formula, 	"{");
+			strcat(final_formula,	"float Edges[4]			: SV_TessFactor;\n");
+			strcat(final_formula, 		"float Inside[2]			: SV_InsideTessFactor;\n");
+			strcat(final_formula, 	"};\n");
+			strcat(final_formula, "struct DS_OUTPUT");
+			strcat(final_formula, "{");
+			strcat(final_formula, "	float4 vPosition	: SV_POSITION;\n");
+			strcat(final_formula, "	float3 v3DPos		: WORLDPOS;\n");
+			strcat(final_formula, "};\n");
+			strcat(final_formula, "[domain(\"quad\")]\n");
+			strcat(final_formula, "DS_OUTPUT SmoothDS( HS_CONSTANT_DATA_OUTPUT input,  float2 UV : SV_DomainLocation,const OutputPatch<HS_OUTPUT, 16> bezpatch )\n");
+			strcat(final_formula, "						{   DS_OUTPUT Output;\n");
+			strcat(final_formula, "float3 WorldPos = calculateFormula(UV.x, UV.y);\n");
+			strcat(final_formula, "Output.v3DPos =WorldPos;\n");
+			strcat(final_formula, "Output.vPosition =mul(float4(WorldPos,1.0f), g_mView);	\n");
+	
+			strcat(final_formula, "return Output;    \n");
+			strcat(final_formula, "}");
 			EndDialog(hDlg, LOWORD(wParam));
 			return (INT_PTR)TRUE;
 		}
