@@ -70,7 +70,7 @@ HRESULT CSurfacePlane::CreateBuffers()
 void CSurfacePlane::Draw(void)
 {
 	//actualize the transformations
-	Graphics()->SetWorldMtx(m_mToWorldXFrom);
+	//Graphics()->SetWorldMtx(m_mToWorldXFrom);
 	Graphics()->SetCullNone();
 	//Graphics()->SetCullFront();
 	Graphics()->SetSmooth();
@@ -145,6 +145,6 @@ void CSurfacePlane::SetPatches()
 void CSurfacePlane::Update(float DeltaTime)
 {
 	m_Ang+=DeltaTime;
-	D3DXMatrixRotationYawPitchRoll(&m_mToWorldXFrom,m_Ang,0.1*m_Ang,0.1*m_Ang);
+	//D3DXMatrixRotationYawPitchRoll(&m_mToWorldXFrom,m_Ang,0,0);
 	
 }

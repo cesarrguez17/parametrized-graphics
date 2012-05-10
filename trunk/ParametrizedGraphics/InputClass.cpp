@@ -9,6 +9,7 @@ InputClass::InputClass()
 {
 	m_directInput = 0;
 	m_mouse = 0;
+	m_mouseDown = false;
 }
 
 
@@ -142,17 +143,22 @@ bool InputClass::ReadMouse()
 
 void InputClass::ProcessInput()
 {
+	m_mouseDown = m_mouseState.rgbButtons[0] != 0;
+
 	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
-	m_mouseX += m_mouseState.lX;
-	m_mouseY += m_mouseState.lY;
+	if(m_mouseDown){
+		m_mouseX += m_mouseState.lX;
+		m_mouseY += m_mouseState.lY;
+	}
+	
 
 	// Ensure the mouse location doesn't exceed the screen width or height.
-	if(m_mouseX < 0)  { m_mouseX = 0; }
+	/*if(m_mouseX < 0)  { m_mouseX = 0; }
 	if(m_mouseY < 0)  { m_mouseY = 0; }
 	
 	if(m_mouseX > m_screenWidth)  { m_mouseX = m_screenWidth; }
 	if(m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
-	
+	*/
 	return;
 }
 
@@ -162,4 +168,8 @@ void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
 	mouseX = m_mouseX;
 	mouseY = m_mouseY;
 	return;
+}
+
+bool InputClass::IsMouseDown(){
+	return m_mouseDown;
 }

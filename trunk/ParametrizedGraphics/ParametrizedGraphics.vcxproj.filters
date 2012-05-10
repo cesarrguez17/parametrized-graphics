@@ -22,7 +22,6 @@
     <None Include="ParametrizedGraphics.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="SurfaceVertex.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
