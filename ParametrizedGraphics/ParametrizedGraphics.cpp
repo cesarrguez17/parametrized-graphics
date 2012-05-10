@@ -282,7 +282,6 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 							
 							LPWSTR temp =  TEXT("1");
-							HWND item = GetDlgItem(hDlg, IDC_EDIT1);
 							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
 
 							GetDlgItemText(hDlg, IDC_EDIT1, temp, len + 1);
@@ -302,7 +301,6 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 
 							LPWSTR temp =  TEXT("1");
-							HWND item = GetDlgItem(hDlg, IDC_EDIT1);
 							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
 
 							GetDlgItemText(hDlg, IDC_EDIT2, temp, len + 1);
@@ -321,7 +319,6 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 
 							LPWSTR temp =  TEXT("1");
-							HWND item = GetDlgItem(hDlg, IDC_EDIT1);
 							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
 
 							GetDlgItemText(hDlg, IDC_EDIT3, temp, len + 1);
@@ -332,7 +329,7 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 						}
 			}
 			//cos(v) * cos(u) ;	pnt.y = cos(v) *sin(u) ;	pnt.z = sin(v);
-			strcat(final_formula, "float3 calculateFormula( float S, float T){float3 pnt = float3(0,0,0);	float u = S;	float v = T;	pnt.x =");
+			strcat(final_formula, "float3 calculateFormula( float s, float t){float3 pnt = float3(0,0,0);	pnt.x =");
 			strcat(final_formula,x_formula);
 			strcat(final_formula,";\n pnt.y=");
 			strcat(final_formula,y_formula);
@@ -366,8 +363,8 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			strcat(final_formula, "DS_OUTPUT SmoothDS( HS_CONSTANT_DATA_OUTPUT input,  float2 UV : SV_DomainLocation,const OutputPatch<HS_OUTPUT, 16> bezpatch )\n");
 			strcat(final_formula, "						{   DS_OUTPUT Output;\n");
 			strcat(final_formula, "float3 WorldPos = calculateFormula(UV.x, UV.y);\n");
-			strcat(final_formula, "Output.v3DPos =WorldPos;\n");
-			strcat(final_formula, "Output.vPosition =mul(float4(WorldPos,1.0f), g_mView);	\n");
+			strcat(final_formula, "Output.v3DPos =mul(float4(WorldPos,1.0f), g_mWorld);\n");
+			strcat(final_formula, "Output.vPosition =mul(float4(Output.v3DPos,1), g_mView);	\n");
 	
 			strcat(final_formula, "return Output;    \n");
 			strcat(final_formula, "}");
@@ -403,7 +400,7 @@ void Render()
 	if(!Graphics()){return;}
 	Graphics()->ClearBackBuffer();
 	Graphics()->ClearStencilBuffer();
-	if(!g_pause)g_Surface->Update(0.001);
+	if(!g_pause)g_Surface->Update(0.005);
 	g_Surface->Draw();
 	Graphics()->Present();	
 

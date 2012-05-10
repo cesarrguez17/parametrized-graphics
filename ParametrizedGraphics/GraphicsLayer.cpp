@@ -261,8 +261,8 @@ int CGraphicsLayer::CreateDeviceAndSwapChain()
    // NumFeatureLevels = 1;
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(
 										m_D3D11Adapter,
-										//D3D_DRIVER_TYPE_HARDWARE,
-										D3D_DRIVER_TYPE_REFERENCE,
+										D3D_DRIVER_TYPE_HARDWARE,
+										//D3D_DRIVER_TYPE_REFERENCE,
 										( HMODULE )0,
 										D3D11_CREATE_DEVICE_DEBUG,
 										FeatureLevels,
@@ -432,8 +432,8 @@ int CGraphicsLayer::CreateShader()
 	SetWorldMtx(mtxWorld);
 
 	D3DXMATRIX mtxView;
-	D3DXVECTOR3 vecEye(3.0f, 3.0f, 3.5f);
-    D3DXVECTOR3 vecAt(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 vecEye(0.0f, 0.0f, 2.0f);
+    D3DXVECTOR3 vecAt(0.0f, 0.0f, 1.0f);
     D3DXVECTOR3 vecUp(0.0f, 1.0f, 0.0f);
     D3DXMatrixLookAtLH(&mtxView, &vecEye, &vecAt, &vecUp);
 	SetViewMtx(mtxView);
@@ -471,6 +471,13 @@ int CGraphicsLayer::CreateShader()
 void CGraphicsLayer::UpdateMatrices()
 {
 	
+	if(m_Input->IsMouseDown()){
+		int x, y;
+		m_Input->GetMouseLocation(x, y);
+
+		D3DXMatrixRotationYawPitchRoll(&m_mWorld,x*.005f,y*.005f,0);
+	}
+
     D3D11_MAPPED_SUBRESOURCE MappedResource;
     m_pDeviceContext->Map( m_pConstantsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource );
     CONSTANTS_MATRICES* pData = ( CONSTANTS_MATRICES* )MappedResource.pData;

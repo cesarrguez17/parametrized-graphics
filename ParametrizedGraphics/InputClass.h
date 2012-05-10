@@ -40,6 +40,7 @@ public:
 	bool Frame();
 
 	void GetMouseLocation(int&, int&);
+	bool IsMouseDown();
 
 private:
 	bool ReadMouse();
@@ -53,6 +54,7 @@ private:
 
 	int m_screenWidth, m_screenHeight;
 	int m_mouseX, m_mouseY;
+	bool m_mouseDown;
 };
 
 #endif

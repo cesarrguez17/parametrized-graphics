@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParametrizedGraphics", "ParametrizedGraphics\ParametrizedGraphics.vcxproj", "{F8F91172-C738-4461-B0C2-DC03DD133AAA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WFComputerGraphics", "WFComputerGraphics\WFComputerGraphics.vcxproj", "{4FADC81D-49DC-4F5D-97B8-9EAD71078988}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{F8F91172-C738-4461-B0C2-DC03DD133AAA}.Debug|Win32.Build.0 = Debug|Win32
 		{F8F91172-C738-4461-B0C2-DC03DD133AAA}.Release|Win32.ActiveCfg = Release|Win32
 		{F8F91172-C738-4461-B0C2-DC03DD133AAA}.Release|Win32.Build.0 = Release|Win32
+		{4FADC81D-49DC-4F5D-97B8-9EAD71078988}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4FADC81D-49DC-4F5D-97B8-9EAD71078988}.Debug|Win32.Build.0 = Debug|Win32
+		{4FADC81D-49DC-4F5D-97B8-9EAD71078988}.Release|Win32.ActiveCfg = Release|Win32
+		{4FADC81D-49DC-4F5D-97B8-9EAD71078988}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
