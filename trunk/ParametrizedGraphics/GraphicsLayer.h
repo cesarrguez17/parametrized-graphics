@@ -1,4 +1,5 @@
 #include "InputClass.h"
+#include "Texture.h"
 
 #pragma once
 #ifndef CGraphics_LAYER
@@ -30,6 +31,9 @@ protected:
 	ID3D11DomainShader			*m_pDSSmooth;
 	ID3D11GeometryShader		*m_pGSSmooth;
 	ID3D11PixelShader			*m_pPSShell;
+	ID3D11PixelShader			*m_pPSTexture;
+	ID3D10EffectShaderResourceVariable *m_pTextures;
+	CTexture					*m_pTextureDiffuse;
 
 	//shell shaders
 	ID3D11GeometryShader		*m_pGSShell;
@@ -126,6 +130,8 @@ public:
 	void SetCullNone();
 	void SetMatrices();
 	void SetSmooth();
+	void SetWithTexture();
+	void SetTexture(ID3D11ShaderResourceView *pTextureShaderView);
 	
 private:
 	InputClass* m_Input;
