@@ -271,6 +271,86 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			char x_formula[100]={};
 			char y_formula[100]={};
 			char z_formula[100]={};
+			char s_rangeBegin[10]={};
+			char s_rangeEnd[10]={};
+			char t_rangeBegin[10]={};
+			char t_rangeEnd[10]={};
+
+
+			{
+				int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_EDIT4));
+				
+				if(len > 0)
+						{
+							// Now we allocate, and get the string into our buffer
+
+							
+							LPWSTR temp =  TEXT("1");
+							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+
+							GetDlgItemText(hDlg, IDC_EDIT4, temp, len + 1);
+
+							wtoc(s_rangeBegin, temp);
+							//MessageBox(hDlg,x_formula, (LPCWSTR)"Warning", MB_OK );
+						}
+				 
+			}
+			{
+				int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_EDIT5));
+				
+				if(len > 0)
+						{
+							// Now we allocate, and get the string into our buffer
+
+							
+							LPWSTR temp =  TEXT("1");
+							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+
+							GetDlgItemText(hDlg, IDC_EDIT5, temp, len + 1);
+
+							wtoc(s_rangeEnd, temp);
+							//MessageBox(hDlg,x_formula, (LPCWSTR)"Warning", MB_OK );
+						}
+				 
+			}
+			{
+				int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_EDIT6));
+				
+				if(len > 0)
+						{
+							// Now we allocate, and get the string into our buffer
+
+							
+							LPWSTR temp =  TEXT("1");
+							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+
+							GetDlgItemText(hDlg, IDC_EDIT6, temp, len + 1);
+
+							wtoc(t_rangeBegin, temp);
+							//MessageBox(hDlg,x_formula, (LPCWSTR)"Warning", MB_OK );
+						}
+				 
+			}
+			{
+				int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_EDIT7));
+				
+				if(len > 0)
+						{
+							// Now we allocate, and get the string into our buffer
+
+							
+							LPWSTR temp =  TEXT("1");
+							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+
+							GetDlgItemText(hDlg, IDC_EDIT7, temp, len + 1);
+
+							wtoc(t_rangeEnd, temp);
+							//MessageBox(hDlg,x_formula, (LPCWSTR)"Warning", MB_OK );
+						}
+				 
+			}
+
+
 			//if(IDC_CHECK1)
 			//TODO:check how to read checkbox value
 			{
@@ -329,7 +409,24 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 						}
 			}
 			//cos(v) * cos(u) ;	pnt.y = cos(v) *sin(u) ;	pnt.z = sin(v);
-			strcat(final_formula, "float3 calculateFormula( float s, float t){float3 pnt = float3(0,0,0);	pnt.x =");
+			strcat(final_formula, "float3 calculateFormula( float s, float t){float3 pnt = float3(0,0,0);");
+			strcat(final_formula, "s=s*(");
+			strcat(final_formula, s_rangeEnd);
+			strcat(final_formula, "-(");
+			strcat(final_formula, s_rangeBegin);
+			strcat(final_formula, "))+(");
+			strcat(final_formula, s_rangeBegin);
+			strcat(final_formula, ");");
+
+			strcat(final_formula, "\n t=t*(");
+			strcat(final_formula, t_rangeEnd);
+			strcat(final_formula, "-(");
+			strcat(final_formula, t_rangeBegin);
+			strcat(final_formula, "))+(");
+			strcat(final_formula, t_rangeBegin);
+			strcat(final_formula, ");");
+
+			strcat(final_formula,"\n pnt.x=");
 			strcat(final_formula,x_formula);
 			strcat(final_formula,";\n pnt.y=");
 			strcat(final_formula,y_formula);
