@@ -2,6 +2,7 @@
 
 //static const float PI = 3.14159265f;
 Texture2D shaderTexture;
+
 SamplerState SampleType{
 	Filter = MIN_MAG_MIP_LINEAR;
     AddressU = Wrap;
@@ -20,6 +21,10 @@ cbuffer cbPerFrame : register( b0 )
 	float4 g_vMouse;
 	
 };
+
+Texture2D  g_DiffuseTex : register( t0 );
+Texture2D  g_Texture : register( t1 );
+SamplerState SamplerStateWrap : register( s0 );
 
 cbuffer cbLightConstants : register(b1){
 	
@@ -44,17 +49,18 @@ struct VS_INPUT2
 struct VS_OUTPUT
 {
 	float3 vPosition	:WORLDPOS;
-	//float2 vTexCoord	:TEXCOORD0;
+	float2 vTexCoord	:TEXCOORD;
 };
 struct HS_OUTPUT
 {
     float3 vPosition	: BEZIERPOS;
-	//float2 vTexCoord	: TEXCOOR0;
+	float2 vTexCoord	:TEXCOORD;
 };
 struct DS_OUTPUT
 {
 	float4 vPosition	: SV_POSITION;
 	float3 v3DPos		: WORLDPOS;
+	float2 vTexCoord	:TEXCOORD;
 };
 struct GS_OUTPUT
 {
@@ -62,14 +68,19 @@ struct GS_OUTPUT
 	float4 vColor		:COLOR0;
 	float3 v3DPos		:WORLDPOS;
 	float3 vNormal		:NORMAL;
-	//float2 vTexCoord	:TEXCOORD0;
+	float2 vTexCoord	:TEXCOORD0;
 };
 struct PS_INPUT
 {
 	float4 vPosition	: SV_POSITION;
 	float4 vColor		:COLOR0;
 };
-
+struct PS_INPUT1
+{
+	float4 vPosition	: SV_POSITION;
+	float4 vColor		:COLOR0;
+	float2 vTexCoord	:TEXCOORD;
+};
 
 //--------------------------------------------------------------------------
 //Vertex shader
@@ -237,3 +248,18 @@ float4 SmoothPS(GS_OUTPUT In) : SV_TARGET
 	//return float4(0,0,0,1);
 }
 
+float4 TexturePS(GS_OUTPUT In ) : SV_TARGET
+{
+	
+	float4 color;
+	float4 textura;
+	float2 producto;
+	producto= In.vTexCoord;
+	// averiguar lo de las coordenadas de la textura;
+	textura=g_DiffuseTex.Sample(SamplerStateWrap, producto) ;
+	
+	color=calcPhongLighting(g_Ambient, normalize(In.vNormal), In.v3DPos);
+    return  textura*color ;
+	
+	//return float4(0.5,0.5,1.0,1.0);
+}

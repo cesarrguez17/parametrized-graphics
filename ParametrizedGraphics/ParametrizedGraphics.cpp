@@ -445,6 +445,7 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			strcat(final_formula, "struct HS_OUTPUT");
 			strcat(final_formula,"{");
 			strcat(final_formula, "float3 vPosition	: BEZIERPOS;\n");
+			strcat(final_formula, "float2 vTexCoord	:TEXCOORD;\n");
 			strcat(final_formula,"};\n");
 			strcat(final_formula, "struct HS_CONSTANT_DATA_OUTPUT");
 			strcat(final_formula, 	"{");
@@ -455,6 +456,7 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			strcat(final_formula, "{");
 			strcat(final_formula, "	float4 vPosition	: SV_POSITION;\n");
 			strcat(final_formula, "	float3 v3DPos		: WORLDPOS;\n");
+			strcat(final_formula, " float2 vTexCoord	:TEXCOORD;\n");
 			strcat(final_formula, "};\n");
 			strcat(final_formula, "[domain(\"quad\")]\n");
 			strcat(final_formula, "DS_OUTPUT SmoothDS( HS_CONSTANT_DATA_OUTPUT input,  float2 UV : SV_DomainLocation,const OutputPatch<HS_OUTPUT, 16> bezpatch )\n");
