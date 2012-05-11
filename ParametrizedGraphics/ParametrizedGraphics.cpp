@@ -362,9 +362,9 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 							
 							LPWSTR temp =  TEXT("1");
-							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+							temp = (LPWSTR)GlobalAlloc(GPTR, len*2);
 
-							GetDlgItemText(hDlg, IDC_EDIT1, temp, len + 1);
+							GetDlgItemText(hDlg, IDC_EDIT1, temp, len*2);
 
 							wtoc(x_formula, temp);
 							//MessageBox(hDlg,x_formula, (LPCWSTR)"Warning", MB_OK );
@@ -381,9 +381,9 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 
 							LPWSTR temp =  TEXT("1");
-							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+							temp = (LPWSTR)GlobalAlloc(GPTR, len*2);
 
-							GetDlgItemText(hDlg, IDC_EDIT2, temp, len + 1);
+							GetDlgItemText(hDlg, IDC_EDIT2, temp, len*2);
 
 							wtoc(y_formula, temp);
 
@@ -399,11 +399,12 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 
 							LPWSTR temp =  TEXT("1");
-							temp = (LPWSTR)GlobalAlloc(GPTR, len + 1);
+							temp = (LPWSTR)GlobalAlloc(GPTR, len*2);
 
-							GetDlgItemText(hDlg, IDC_EDIT3, temp, len + 1);
+							GetDlgItemText(hDlg, IDC_EDIT3, temp, len*2);
 
 							wtoc(z_formula, temp);
+
 
 							//MessageBox(hDlg,z_formula, (LPCWSTR)"Warning", MB_OK );
 						}
