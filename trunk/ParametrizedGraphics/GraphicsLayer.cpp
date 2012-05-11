@@ -261,8 +261,8 @@ int CGraphicsLayer::CreateDeviceAndSwapChain()
    // NumFeatureLevels = 1;
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(
 										m_D3D11Adapter,
-										D3D_DRIVER_TYPE_HARDWARE,
-										//D3D_DRIVER_TYPE_REFERENCE,
+										//D3D_DRIVER_TYPE_HARDWARE,
+										D3D_DRIVER_TYPE_REFERENCE,
 										( HMODULE )0,
 										D3D11_CREATE_DEVICE_DEBUG,
 										FeatureLevels,
@@ -433,7 +433,7 @@ int CGraphicsLayer::CreateShader()
 	SetWorldMtx(mtxWorld);
 
 	D3DXMATRIX mtxView;
-	D3DXVECTOR3 vecEye(0.0f, 0.0f, 2.0f);
+	D3DXVECTOR3 vecEye(1.0f, 1.0f, 2.0f);
     D3DXVECTOR3 vecAt(0.0f, 0.0f, 1.0f);
     D3DXVECTOR3 vecUp(0.0f, 1.0f, 0.0f);
     D3DXMatrixLookAtLH(&mtxView, &vecEye, &vecAt, &vecUp);
@@ -453,13 +453,13 @@ int CGraphicsLayer::CreateShader()
 	pData->g_Diffuse = D3DXVECTOR4(0.7f,0.7f, 0.7f, 1.0f);
 	pData->g_Specular = D3DXVECTOR4(0.65f, 0.65f, 0.65f, 1.0f);
 
-	pData->g_vLightPos[0] = D3DXVECTOR4(0, 10.0f, 0, 1.0f);
-	pData->g_vLightPos[1] = D3DXVECTOR4(10.0f, 0, 0, 1.0f);
-	pData->g_vLightPos[2] = D3DXVECTOR4(1.0f, 0, 0.5f, 1.0f);
+	pData->g_vLightPos[0] = D3DXVECTOR4(0, 2.0f, 0, 2.0f);
+	pData->g_vLightPos[1] = D3DXVECTOR4(0.0f, 0, 2, 1.0f);
+	pData->g_vLightPos[2] = D3DXVECTOR4(0.0f, 0, -2.0f, 1.0f);
 
 	pData->g_vLightColor[0] = D3DXVECTOR4(0.6f, 0.6f, 0.6f, 1);
-	pData->g_vLightColor[1] = D3DXVECTOR4(0.0f, 0.2f, 0.7f, 1);
-	pData->g_vLightColor[2] = D3DXVECTOR4(1,0.3f,0, 1);
+	pData->g_vLightColor[1] = D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1);
+	pData->g_vLightColor[2] = D3DXVECTOR4(0.8,0.8f,0.8, 1);
 
 	pData->g_vEyePos = D3DXVECTOR4( vecEye.x, vecEye.y, vecEye.z, 1);
 
