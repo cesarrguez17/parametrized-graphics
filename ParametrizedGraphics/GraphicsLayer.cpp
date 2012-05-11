@@ -409,6 +409,7 @@ int CGraphicsLayer::CreateShader()
 	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "SmoothGS",	   "gs_5_0", &pBlobGS )!=S_OK){return 1;}
 	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "SmoothPS",	   "ps_5_0", &pBlobPS )!=S_OK){return 1;}
 	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "TexturePS",	   "ps_5_0", &pBlobPST )!=S_OK){return 1;}
+	  
 	 if(m_pDevice->CreateVertexShader( pBlobVS->GetBufferPointer(), pBlobVS->GetBufferSize(), NULL, &m_pVSGouraud )!=S_OK){return 1;}
 	 if(m_pDevice->CreateHullShader(  pBlobHS->GetBufferPointer(), pBlobHS->GetBufferSize(), NULL, &m_pHSSmooth )!=S_OK){return 1;}
 	 if(m_pDevice->CreateDomainShader(  pBlobDS->GetBufferPointer(), pBlobDS->GetBufferSize(), NULL, &m_pDSSmooth )!=S_OK){return 1;}
@@ -425,7 +426,7 @@ int CGraphicsLayer::CreateShader()
 		pBlobVS->GetBufferSize(), &m_pVertexLayout )!=S_OK){return 1;}
 	
 	m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
-
+	 SetTexture(m_pTextures);
 	if(CreateConstantsBuffer()!=S_OK){return 1;}
 
 
@@ -550,7 +551,7 @@ void CGraphicsLayer::SetWithTexture()
 	//Asigna los shaders a mostrarse
 	//ID3D11Texture2D *tex;
 	
-	//SetTexture(m_pTextures);
+	
 	m_pDeviceContext->VSSetShader( m_pVSGouraud, NULL, 0 );
 	m_pDeviceContext->HSSetShader( m_pHSSmooth, NULL, 0 );
     m_pDeviceContext->DSSetShader( m_pDSSmooth, NULL, 0 );

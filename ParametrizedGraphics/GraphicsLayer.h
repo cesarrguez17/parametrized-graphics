@@ -32,7 +32,7 @@ protected:
 	ID3D11GeometryShader		*m_pGSSmooth;
 	ID3D11PixelShader			*m_pPSShell;
 	ID3D11PixelShader			*m_pPSTexture;
-	ID3D10EffectShaderResourceVariable *m_pTextures;
+	ID3D11ShaderResourceView *m_pTextures;
 	CTexture					*m_pTextureDiffuse;
 
 	//shell shaders
