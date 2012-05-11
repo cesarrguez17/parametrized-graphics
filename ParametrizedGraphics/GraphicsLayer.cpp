@@ -573,7 +573,7 @@ void CGraphicsLayer::SetTexture(ID3D11ShaderResourceView *pTextureShaderView)
     sampDesc.MinLOD = 0;
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 	m_pDevice->CreateSamplerState(&sampDesc, &TexSamplerState );
-	m_pTextureDiffuse = new CTexture(  L"checkers.jpg", 0 ); 
+	m_pTextureDiffuse = new CTexture(  L"checkers.dds", 0 ); 
 	pTextureShaderView = m_pTextureDiffuse->GetShaderView();
 	m_pDeviceContext->PSSetShaderResources(0,1,&pTextureShaderView);
 	m_pDeviceContext->PSSetSamplers( 0, 1, &TexSamplerState );
