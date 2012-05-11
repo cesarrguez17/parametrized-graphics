@@ -22,7 +22,6 @@
     <None Include="ParametrizedGraphics.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="checkers.dds" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -74,5 +73,8 @@
     <ResourceCompile Include="ParametrizedGraphics.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="checkers.dds" />
   </ItemGroup>
 </Project>

@@ -79,7 +79,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="checkers.dds" />
+    <EmbeddedResource Include="checkers.dds">
+      <FileType>Document</FileType>
+    </EmbeddedResource>
     <None Include="ParametrizedGraphics.ico" />
     <None Include="ReadMe.txt" />
     <None Include="small.ico" />
