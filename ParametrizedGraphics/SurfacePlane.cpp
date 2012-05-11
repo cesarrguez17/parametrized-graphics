@@ -7,7 +7,7 @@
 CSurfacePlane::CSurfacePlane(void){
 	m_pVertexBuffer=NULL;
 	m_pPatchIndexBuffer=NULL;
-	//m_texture = 0;
+	m_texture = 0;
 	m_iNumVertex=0;
 	m_iNumPatches=0;
 	m_Ang=1.1;
@@ -15,7 +15,7 @@ CSurfacePlane::CSurfacePlane(void){
 	SetVertex();
 	//SetTexCoords();
 	SetPatches();
-	//LoadTextures();
+	LoadTextures();
 	CreateBuffers();
 
 }
@@ -71,10 +71,9 @@ void CSurfacePlane::Draw(void)
 {
 	//actualize the transformations
 	//Graphics()->SetWorldMtx(m_mToWorldXFrom);
-	//Graphics()->SetCullNone();
+	Graphics()->SetCullNone();
 	//Graphics()->SetCullFront();
-	//Graphics()->SetSmooth();
-	Graphics()->SetWithTexture();
+	Graphics()->SetSmooth();
 	//get the buffers
 	UINT uiStride=sizeof(CSurfacePlaneVertex);
 	UINT uiOffset=0;
@@ -84,11 +83,6 @@ void CSurfacePlane::Draw(void)
 	
 	Graphics()->UpdateMatrices();
 	Graphics()->SetMatrices();
-	
-	//draw shell
-	
-	
-	//
 	Graphics()->GetDeviceContext()->DrawIndexed(GetNumPatches()*16,0,0);
 }
 
@@ -141,6 +135,26 @@ void CSurfacePlane::SetPatches()
 	m_PatchIndx[0].v[14]=14;
 	m_PatchIndx[0].v[15]=15;
 	m_iNumPatches = 1;
+}
+
+boolean CSurfacePlane::LoadTextures(){
+	HRESULT result;
+
+	result = D3DX11CreateShaderResourceViewFromFile(Graphics()->GetDevice(), L"../ParametrizedGraphics/checkers.dds", NULL, NULL, &m_texture, NULL);
+	if(FAILED(result)){
+		int i= 0;
+		switch(result){
+		case D3D11_ERROR_FILE_NOT_FOUND:
+			i=1;
+			break;
+		case D3DERR_INVALIDCALL:
+			i=1;
+			break;
+		}
+		return false;
+	}
+	Graphics()->GetDeviceContext()->PSSetShaderResources(0, 1, &m_texture);
+	return true;
 }
 
 void CSurfacePlane::Update(float DeltaTime)
