@@ -74,6 +74,7 @@ void CSurfacePlane::Draw(void)
 	Graphics()->SetCullNone();
 	//Graphics()->SetCullFront();
 	Graphics()->SetSmooth();
+	//Graphics()->SetWithTexture();
 	//get the buffers
 	UINT uiStride=sizeof(CSurfacePlaneVertex);
 	UINT uiOffset=0;

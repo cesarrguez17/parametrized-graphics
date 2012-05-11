@@ -22,9 +22,7 @@
     <None Include="ParametrizedGraphics.ico">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="checkers.jpg">
-      <Filter>Resource Files</Filter>
-    </None>
+    <None Include="checkers.dds" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
