@@ -30,10 +30,8 @@ CGraphicsLayer::CGraphicsLayer(HWND	hwnd, char* final_formula)
 	m_pPSGouraud=NULL;
 	m_pHSSmooth=NULL;
 	m_pDSSmooth=NULL;
-	m_pPSTexture=NULL;
 	m_pGSSmooth=NULL;
 	m_pPSShell=NULL;
-	m_pTextures=NULL;
 
 	//graphing
 	m_final_formula = final_formula;
@@ -263,8 +261,8 @@ int CGraphicsLayer::CreateDeviceAndSwapChain()
    // NumFeatureLevels = 1;
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(
 										m_D3D11Adapter,
-										//D3D_DRIVER_TYPE_HARDWARE,
-										D3D_DRIVER_TYPE_REFERENCE,
+										D3D_DRIVER_TYPE_HARDWARE,
+										//D3D_DRIVER_TYPE_REFERENCE,
 										( HMODULE )0,
 										D3D11_CREATE_DEVICE_DEBUG,
 										FeatureLevels,
@@ -408,14 +406,13 @@ int CGraphicsLayer::CreateShader()
 	 if(CompileShaderFromString("SmoothDS", "ds_5_0", &pBlobDS) != S_OK){return 1;}
 	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "SmoothGS",	   "gs_5_0", &pBlobGS )!=S_OK){return 1;}
 	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "SmoothPS",	   "ps_5_0", &pBlobPS )!=S_OK){return 1;}
-	 if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "TexturePS",	   "ps_5_0", &pBlobPST )!=S_OK){return 1;}
-	  
+	 //if(CompileShaderFromFile( L"D3D11SimpleFx.hlsl", "TexturePS",	   "ps_5_0", &pBlobPST )!=S_OK){return 1;}
 	 if(m_pDevice->CreateVertexShader( pBlobVS->GetBufferPointer(), pBlobVS->GetBufferSize(), NULL, &m_pVSGouraud )!=S_OK){return 1;}
 	 if(m_pDevice->CreateHullShader(  pBlobHS->GetBufferPointer(), pBlobHS->GetBufferSize(), NULL, &m_pHSSmooth )!=S_OK){return 1;}
 	 if(m_pDevice->CreateDomainShader(  pBlobDS->GetBufferPointer(), pBlobDS->GetBufferSize(), NULL, &m_pDSSmooth )!=S_OK){return 1;}
 	 if(m_pDevice->CreateGeometryShader(  pBlobGS->GetBufferPointer(), pBlobGS->GetBufferSize(), NULL, &m_pGSSmooth )!=S_OK){return 1;}
 	 if(m_pDevice->CreatePixelShader(  pBlobPS->GetBufferPointer(), pBlobPS->GetBufferSize(), NULL, &m_pPSGouraud )!=S_OK){return 1;}
-	 if(m_pDevice->CreatePixelShader(  pBlobPST->GetBufferPointer(), pBlobPST->GetBufferSize(), NULL, &m_pPSTexture )!=S_OK){return 1;}
+	 //if(m_pDevice->CreatePixelShader(  pBlobPST->GetBufferPointer(), pBlobPST->GetBufferSize(), NULL, &m_pPSTexture )!=S_OK){return 1;}
 	D3D11_INPUT_ELEMENT_DESC defaultLayout[] =
 	{
 		{"POSITION", 0 ,DXGI_FORMAT_R32G32B32_FLOAT,0, 0,D3D11_INPUT_PER_VERTEX_DATA,0},
@@ -426,7 +423,7 @@ int CGraphicsLayer::CreateShader()
 		pBlobVS->GetBufferSize(), &m_pVertexLayout )!=S_OK){return 1;}
 	
 	m_pDeviceContext->IASetInputLayout(m_pVertexLayout);
-	 SetTexture(m_pTextures);
+
 	if(CreateConstantsBuffer()!=S_OK){return 1;}
 
 
@@ -544,41 +541,6 @@ void CGraphicsLayer::SetSmooth()
     m_pDeviceContext->DSSetShader( m_pDSSmooth, NULL, 0 );
     m_pDeviceContext->GSSetShader( m_pGSSmooth, NULL, 0 );
     m_pDeviceContext->PSSetShader( m_pPSGouraud, NULL, 0 );
-}
-
-void CGraphicsLayer::SetWithTexture()
-{
-	//Asigna los shaders a mostrarse
-	//ID3D11Texture2D *tex;
-	
-	
-	m_pDeviceContext->VSSetShader( m_pVSGouraud, NULL, 0 );
-	m_pDeviceContext->HSSetShader( m_pHSSmooth, NULL, 0 );
-    m_pDeviceContext->DSSetShader( m_pDSSmooth, NULL, 0 );
-	m_pDeviceContext->GSSetShader( m_pGSSmooth, NULL, 0 );
-    m_pDeviceContext->PSSetShader( m_pPSTexture, NULL, 0 );
-	
-	
-}
-
-void CGraphicsLayer::SetTexture(ID3D11ShaderResourceView *pTextureShaderView)
-{
-	ID3D11SamplerState* TexSamplerState;
-	D3D11_SAMPLER_DESC sampDesc;
-	ZeroMemory( &sampDesc, sizeof(sampDesc) );
-	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-    sampDesc.MinLOD = 0;
-    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	m_pDevice->CreateSamplerState(&sampDesc, &TexSamplerState );
-	m_pTextureDiffuse = new CTexture(  L"checkers.dds", 0 ); 
-	pTextureShaderView = m_pTextureDiffuse->GetShaderView();
-	m_pDeviceContext->PSSetShaderResources(0,1,&pTextureShaderView);
-	m_pDeviceContext->PSSetSamplers( 0, 1, &TexSamplerState );
-		
 }
 
 //-----------------------------------------------------------------------------------------------------------------

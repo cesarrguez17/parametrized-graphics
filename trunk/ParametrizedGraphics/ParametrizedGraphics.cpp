@@ -445,7 +445,7 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			strcat(final_formula, "struct HS_OUTPUT");
 			strcat(final_formula,"{");
 			strcat(final_formula, "float3 vPosition	: BEZIERPOS;\n");
-			strcat(final_formula, "float2 vTexCoord	:TEXCOORD;\n");
+			strcat(final_formula, "//float2 vTexCoord	:TEXCOORD;\n");
 			strcat(final_formula,"};\n");
 			strcat(final_formula, "struct HS_CONSTANT_DATA_OUTPUT");
 			strcat(final_formula, 	"{");
@@ -464,7 +464,7 @@ INT_PTR CALLBACK Formulas(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			strcat(final_formula, "float3 WorldPos = calculateFormula(UV.x, UV.y);\n");
 			strcat(final_formula, "Output.v3DPos =mul(float4(WorldPos,1.0f), g_mWorld);\n");
 			strcat(final_formula, "Output.vPosition =mul(float4(Output.v3DPos,1), g_mView);	\n");
-	
+			strcat(final_formula, "Output.vTexCoord =UV;	\n");
 			strcat(final_formula, "return Output;    \n");
 			strcat(final_formula, "}");
 			EndDialog(hDlg, LOWORD(wParam));

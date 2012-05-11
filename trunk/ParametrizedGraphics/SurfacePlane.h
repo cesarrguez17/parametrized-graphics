@@ -34,7 +34,6 @@ public:
 	ID3D11ShaderResourceView* m_texture;
 
 	void	 SetVertex();
-	//boolean	 LoadTextures();
 	//void	 SetTexCoords();
 	void	 SetPatches();
 
@@ -42,5 +41,6 @@ public:
 	int		 GetNumPatches();
 	void	 Draw();
 	void	 Update(float DeltaTime);
+	boolean  LoadTextures();
 	HRESULT  CreateBuffers();
 };

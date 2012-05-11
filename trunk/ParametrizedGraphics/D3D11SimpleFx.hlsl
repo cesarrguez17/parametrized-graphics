@@ -1,9 +1,8 @@
 #define NUM_LIGHTS 3
 
-//static const float PI = 3.14159265f;
-Texture2D shaderTexture;
+Texture2D shaderTexture : register(t0);
 
-SamplerState SampleType{
+SamplerState SampleType : register( s0 ){
 	Filter = MIN_MAG_MIP_LINEAR;
     AddressU = Wrap;
     AddressV = Wrap;
@@ -22,9 +21,6 @@ cbuffer cbPerFrame : register( b0 )
 	
 };
 
-Texture2D  g_DiffuseTex : register( t0 );
-Texture2D  g_Texture : register( t1 );
-SamplerState SamplerStateWrap : register( s0 );
 
 cbuffer cbLightConstants : register(b1){
 	
@@ -49,12 +45,12 @@ struct VS_INPUT2
 struct VS_OUTPUT
 {
 	float3 vPosition	:WORLDPOS;
-	float2 vTexCoord	:TEXCOORD;
+	//float2 vTexCoord	:TEXCOORD;
 };
 struct HS_OUTPUT
 {
     float3 vPosition	: BEZIERPOS;
-	float2 vTexCoord	:TEXCOORD;
+	//float2 vTexCoord	:TEXCOORD;
 };
 struct DS_OUTPUT
 {
@@ -89,6 +85,7 @@ VS_OUTPUT SmoothVS(VS_INPUT2 In)
 {	
 	VS_OUTPUT result;
     result.vPosition=mul(float4(In.vPosition, 1.0f), g_mWorld);
+	//result.vTexCoord = In.vTexCoord;
     return result;  
 }
 
@@ -197,17 +194,17 @@ void SmoothGS( triangle DS_OUTPUT input[3], inout TriangleStream<GS_OUTPUT> triS
 	vP0.vColor =float4(0,0,0,1);
 	vP0.v3DPos =input[0].v3DPos;
 	vP0.vNormal=faceNormal;
-	//vP0.vTexCoord = input[0].vTexCoord;
+	vP0.vTexCoord = input[0].vTexCoord;
     triStream.Append( vP0 );
 
 	vP0.vPosition = input[1].vPosition;
 	vP0.v3DPos =input[1].v3DPos;
-	//vP0.vTexCoord = input[1].vTexCoord;
+	vP0.vTexCoord = input[1].vTexCoord;
 	triStream.Append( vP0 );
 
 	vP0.vPosition = input[2].vPosition;
 	vP0.v3DPos =input[2].v3DPos;
-	//vP0.vTexCoord = input[2].vTexCoord;
+	vP0.vTexCoord = input[2].vTexCoord;
 	triStream.Append( vP0 );
 	triStream.RestartStrip();
 }
@@ -243,23 +240,6 @@ float4 calcPhongLighting(float4 vColor, float3 N, float3 Pos )
 
 float4 SmoothPS(GS_OUTPUT In) : SV_TARGET
 {
-	
-	return calcPhongLighting(g_Ambient, normalize(In.vNormal), In.v3DPos); 
-	//return float4(0,0,0,1);
-}
-
-float4 TexturePS(GS_OUTPUT In ) : SV_TARGET
-{
-	
-	float4 color;
-	float4 textura;
-	float2 producto;
-	producto= In.vTexCoord;
-	// averiguar lo de las coordenadas de la textura;
-	textura=g_DiffuseTex.Sample(SamplerStateWrap, producto) ;
-	
-	color=calcPhongLighting(g_Ambient, normalize(In.vNormal), In.v3DPos);
-    return  textura*color ;
-	
-	//return float4(0.5,0.5,1.0,1.0);
+	return calcPhongLighting( shaderTexture.Sample(SampleType, In.vTexCoord), normalize(In.vNormal), In.v3DPos);
+	//return calcPhongLighting( g_Ambient, normalize(In.vNormal), In.v3DPos);
 }
