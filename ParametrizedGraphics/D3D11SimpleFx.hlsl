@@ -107,7 +107,7 @@ HS_CONSTANT_DATA_OUTPUT MyConstantsHS( InputPatch<VS_OUTPUT, 16> ip,
 {	
     HS_CONSTANT_DATA_OUTPUT Output;
     
-    float TessAmount = 16.0f;
+    float TessAmount = 64.0f;
     Output.Edges[0] = Output.Edges[1] = Output.Edges[2] = Output.Edges[3] = TessAmount;
     Output.Inside[0] = Output.Inside[1] = TessAmount;
    

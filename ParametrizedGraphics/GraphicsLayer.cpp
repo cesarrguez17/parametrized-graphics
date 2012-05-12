@@ -261,8 +261,8 @@ int CGraphicsLayer::CreateDeviceAndSwapChain()
    // NumFeatureLevels = 1;
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(
 										m_D3D11Adapter,
-										//D3D_DRIVER_TYPE_HARDWARE,
-										D3D_DRIVER_TYPE_REFERENCE,
+										D3D_DRIVER_TYPE_HARDWARE,
+										//D3D_DRIVER_TYPE_REFERENCE,
 										( HMODULE )0,
 										D3D11_CREATE_DEVICE_DEBUG,
 										FeatureLevels,

@@ -208,6 +208,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
+			DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_FORMVIEW), hWnd, Formulas);
 			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
